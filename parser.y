@@ -8,16 +8,15 @@ extern "C" int yylex();
 extern "C" int yyparse();
 extern "C" FILE *yyin;
 
+#include "nodes.h"
 extern unsigned int linenum;
  
 void yyerror(const char *s);
 
 #define YYERROR_VERBOSE
 
-/*class NodeProgram {}
-class NodeExprList {}
-class NodeExpr {}
-class NodeNumber {}*/
+NodeProgram* program;
+
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -27,6 +26,7 @@ class NodeNumber {}*/
 // use that union instead of "int" for the definition of "yystype":
 %union {
 	int ival;
+	Node* nodeval;
 	//float fval;
 	//char *sval;
 }
@@ -34,24 +34,45 @@ class NodeNumber {}*/
 // define the "terminal symbol" token types I'm going to use (in CAPS
 // by convention), and associate each with a field of the union:
 %token <ival> INT
+%token SEMICOLON
 %token PLUS
 %token MINUS
-%token SEMICOLON
+%token MUL
+%token DIV
+
+%type <nodeval> program exprlist expr expr_muldiv arithmetic_unit  // use nodeval from the union as result of these expressions
 
 %%
 
 program:
-	exprlist			{ cout << "Successfully compiled." << endl; }
+	exprlist			{ $$ = program = new NodeProgram((NodeExprList*)$1); cout << "Successfully compiled." << endl; }
 
 exprlist:
-	exprlist expr SEMICOLON		{}
-	| expr SEMICOLON		{}
+	exprlist expr SEMICOLON		{
+		if ($1->getSymbol() == "exprlist") {
+			((NodeExprList*)$1)->addChild($2); $$ = $1;
+		} else { $$ = new NodeExprList($1, $2); }  // To flatten the exprlist binary tree into a single exprlist.
+	}
+
+	| expr SEMICOLON		{ $$ = new NodeExprList($1); }
 
 expr:
-	INT PLUS INT			{ cout << "Found expr: " << $1 << '+' << $3 << endl; }
-	| INT MINUS INT			{ cout << "Found expr: " << $1 << '+' << $3 << endl; }
+	expr	PLUS	expr_muldiv	{ $$ = new NodePlus($1, $3); }
+	| expr	MINUS	expr_muldiv	{ $$ = new NodeMinus($1, $3); }
+	| expr_muldiv			{ $$ = $1; }
+
+expr_muldiv:
+	expr_muldiv	MUL	arithmetic_unit		{ $$ = new NodeMul($1, $3); }
+	| expr_muldiv	DIV	arithmetic_unit		{ $$ = new NodeDiv($1, $3); }
+	| arithmetic_unit				{ $$ = $1; }
+	
+
+arithmetic_unit:
+	INT				{ $$ = new NodeNumeric($1); }
 
 %%
+
+#include <fstream>
 
 int main(int, char**) {
 	// open a file handle to a particular file:
@@ -67,11 +88,17 @@ int main(int, char**) {
 	do {
 		yyparse();
 	} while (!feof(yyin));
+
+	ofstream dotfile("graph.dot");
+	dotfile << "digraph {\n" << program->getDotCommand("root") << "}\n";
+	dotfile.close();
+
+	system("dot -Tpng -Efontname=Roboto -Nfontname=Roboto graph.dot -o graph.png");
 	
 }
 
 void yyerror(const char *s) {
-	cout << "Parse error!  Message: " << s << endl << "Found at line " << linenum << "." << endl;
+	cout << "Parse error - " << s << endl << "Found at line " << linenum << "." << endl;
 	// might as well halt now:
 	exit(-1);
 }

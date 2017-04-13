@@ -46,9 +46,11 @@ extern int yydebug;
   enum yytokentype
   {
     INT = 258,
-    PLUS = 259,
-    MINUS = 260,
-    SEMICOLON = 261
+    SEMICOLON = 259,
+    PLUS = 260,
+    MINUS = 261,
+    MUL = 262,
+    DIV = 263
   };
 #endif
 
@@ -57,13 +59,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 23 "parser.y" /* yacc.c:1909  */
+#line 27 "parser.y" /* yacc.c:1909  */
 
 	int ival;
+	Node* nodeval;
 	//float fval;
 	//char *sval;
 
-#line 67 "parser.tab.h" /* yacc.c:1909  */
+#line 70 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

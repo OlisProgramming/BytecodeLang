@@ -4,6 +4,8 @@
 using namespace std;
 #define YY_DECL extern "C" int yylex()
 
+#include "nodes.h"
+
 #include "parser.tab.h"  // to get the token types that we return
 
 unsigned int linenum = 1;
@@ -13,6 +15,8 @@ unsigned int linenum = 1;
 \n			{ ++linenum; }
 \+			{ return PLUS; }
 -			{ return MINUS; }
+\*			{ return MUL; }
+\/			{ return DIV; }
 ;			{ return SEMICOLON; }
 [0-9]+			{ yylval.ival = atoi(yytext); return INT;  /* [a-zA-Z0-9]+		{
 	yyerror("Do not use strings...yet");
@@ -20,4 +24,5 @@ unsigned int linenum = 1;
 	//yylval.sval = strdup(yytext);
 	return INT;
 }*/ }
+.			;
 %%
