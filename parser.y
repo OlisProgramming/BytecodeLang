@@ -46,7 +46,7 @@ NodeProgram* program;
 %%
 
 program:
-	exprlist			{ $$ = program = new NodeProgram((NodeExprList*)$1); cout << "Successfully compiled." << endl; }
+	exprlist			{ $$ = program = new NodeProgram((NodeExprList*)$1); cout << "Successfully completed lexical analysis and syntax tree parsing." << endl; }
 
 exprlist:
 	exprlist expr SEMICOLON		{
@@ -79,6 +79,8 @@ Node* parse_file(FILE* myfile) {
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
 	
+	cout << "Begin lexical analysis and syntax tree parsing..." << endl;
+
 	// parse through the input until there is no more:
 	do {
 		yyparse();

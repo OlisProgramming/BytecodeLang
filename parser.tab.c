@@ -1231,7 +1231,7 @@ yyreduce:
     {
         case 2:
 #line 49 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodeval) = program = new NodeProgram((NodeExprList*)(yyvsp[0].nodeval)); cout << "Successfully compiled." << endl; }
+    { (yyval.nodeval) = program = new NodeProgram((NodeExprList*)(yyvsp[0].nodeval)); cout << "Successfully completed lexical analysis and syntax tree parsing." << endl; }
 #line 1236 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1531,6 +1531,8 @@ Node* parse_file(FILE* myfile) {
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
 	
+	cout << "Begin lexical analysis and syntax tree parsing..." << endl;
+
 	// parse through the input until there is no more:
 	do {
 		yyparse();

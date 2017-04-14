@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "nodes.h"
+#include "bytecode_generator.h"
 
 int main(int argc, char* argv[]) {
 	// open a file handle to a particular file:
@@ -10,7 +11,7 @@ int main(int argc, char* argv[]) {
 	}
 	Node* program = parse_file(myfile);
 	
-	
+	generate_bytecode(program, "program.bin");
 	
 	return 0;
 }
