@@ -74,6 +74,7 @@ extern "C" int yyparse();
 extern "C" FILE *yyin;
 
 #include "nodes.h"
+#include "parser.h"
 extern unsigned int linenum;
  
 void yyerror(const char *s);
@@ -83,7 +84,7 @@ void yyerror(const char *s);
 NodeProgram* program;
 
 
-#line 87 "parser.tab.c" /* yacc.c:339  */
+#line 88 "parser.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -132,14 +133,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 27 "parser.y" /* yacc.c:355  */
+#line 28 "parser.y" /* yacc.c:355  */
 
 	int ival;
 	Node* nodeval;
 	//float fval;
 	//char *sval;
 
-#line 143 "parser.tab.c" /* yacc.c:355  */
+#line 144 "parser.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -156,7 +157,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 160 "parser.tab.c" /* yacc.c:358  */
+#line 161 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -454,8 +455,8 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    48,    48,    51,    57,    60,    61,    62,    65,    66,
-      67,    71
+       0,    49,    49,    52,    58,    61,    62,    63,    66,    67,
+      68,    72
 };
 #endif
 
@@ -1229,71 +1230,71 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 48 "parser.y" /* yacc.c:1646  */
+#line 49 "parser.y" /* yacc.c:1646  */
     { (yyval.nodeval) = program = new NodeProgram((NodeExprList*)(yyvsp[0].nodeval)); cout << "Successfully compiled." << endl; }
-#line 1235 "parser.tab.c" /* yacc.c:1646  */
+#line 1236 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 51 "parser.y" /* yacc.c:1646  */
+#line 52 "parser.y" /* yacc.c:1646  */
     {
 		if ((yyvsp[-2].nodeval)->getSymbol() == "exprlist") {
 			((NodeExprList*)(yyvsp[-2].nodeval))->addChild((yyvsp[-1].nodeval)); (yyval.nodeval) = (yyvsp[-2].nodeval);
 		} else { (yyval.nodeval) = new NodeExprList((yyvsp[-2].nodeval), (yyvsp[-1].nodeval)); }  // To flatten the exprlist binary tree into a single exprlist.
 	}
-#line 1245 "parser.tab.c" /* yacc.c:1646  */
+#line 1246 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 57 "parser.y" /* yacc.c:1646  */
+#line 58 "parser.y" /* yacc.c:1646  */
     { (yyval.nodeval) = new NodeExprList((yyvsp[-1].nodeval)); }
-#line 1251 "parser.tab.c" /* yacc.c:1646  */
+#line 1252 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 60 "parser.y" /* yacc.c:1646  */
+#line 61 "parser.y" /* yacc.c:1646  */
     { (yyval.nodeval) = new NodePlus((yyvsp[-2].nodeval), (yyvsp[0].nodeval)); }
-#line 1257 "parser.tab.c" /* yacc.c:1646  */
+#line 1258 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 61 "parser.y" /* yacc.c:1646  */
+#line 62 "parser.y" /* yacc.c:1646  */
     { (yyval.nodeval) = new NodeMinus((yyvsp[-2].nodeval), (yyvsp[0].nodeval)); }
-#line 1263 "parser.tab.c" /* yacc.c:1646  */
+#line 1264 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 62 "parser.y" /* yacc.c:1646  */
+#line 63 "parser.y" /* yacc.c:1646  */
     { (yyval.nodeval) = (yyvsp[0].nodeval); }
-#line 1269 "parser.tab.c" /* yacc.c:1646  */
+#line 1270 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 65 "parser.y" /* yacc.c:1646  */
+#line 66 "parser.y" /* yacc.c:1646  */
     { (yyval.nodeval) = new NodeMul((yyvsp[-2].nodeval), (yyvsp[0].nodeval)); }
-#line 1275 "parser.tab.c" /* yacc.c:1646  */
+#line 1276 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 66 "parser.y" /* yacc.c:1646  */
+#line 67 "parser.y" /* yacc.c:1646  */
     { (yyval.nodeval) = new NodeDiv((yyvsp[-2].nodeval), (yyvsp[0].nodeval)); }
-#line 1281 "parser.tab.c" /* yacc.c:1646  */
+#line 1282 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 67 "parser.y" /* yacc.c:1646  */
+#line 68 "parser.y" /* yacc.c:1646  */
     { (yyval.nodeval) = (yyvsp[0].nodeval); }
-#line 1287 "parser.tab.c" /* yacc.c:1646  */
+#line 1288 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 71 "parser.y" /* yacc.c:1646  */
+#line 72 "parser.y" /* yacc.c:1646  */
     { (yyval.nodeval) = new NodeNumeric((yyvsp[0].ival)); }
-#line 1293 "parser.tab.c" /* yacc.c:1646  */
+#line 1294 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1297 "parser.tab.c" /* yacc.c:1646  */
+#line 1298 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1521,18 +1522,12 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 73 "parser.y" /* yacc.c:1906  */
+#line 74 "parser.y" /* yacc.c:1906  */
 
 
 #include <fstream>
 
-int main(int, char**) {
-	// open a file handle to a particular file:
-	FILE *myfile = fopen("program.txt", "r");
-	// make sure it is valid:
-	if (!myfile) {
-		return -1;
-	}
+Node* parse_file(FILE* myfile) {
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
 	
@@ -1547,6 +1542,7 @@ int main(int, char**) {
 
 	system("dot -Tpng -Efontname=Roboto -Nfontname=Roboto graph.dot -o graph.png");
 	
+	return program;
 }
 
 void yyerror(const char *s) {

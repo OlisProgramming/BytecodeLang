@@ -57,7 +57,7 @@ public:
 
 class NodeExprList : public Node {
 protected:
-	vector<Node*> arglist;
+	std::vector<Node*> arglist;
 public:
 	NodeExprList(Node* left) { arglist.push_back(left); }
 	NodeExprList(Node* left, Node* right) { arglist.push_back(left); arglist.push_back(right); }

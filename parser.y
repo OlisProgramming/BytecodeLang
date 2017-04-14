@@ -9,6 +9,7 @@ extern "C" int yyparse();
 extern "C" FILE *yyin;
 
 #include "nodes.h"
+#include "parser.h"
 extern unsigned int linenum;
  
 void yyerror(const char *s);
@@ -74,13 +75,7 @@ arithmetic_unit:
 
 #include <fstream>
 
-int main(int, char**) {
-	// open a file handle to a particular file:
-	FILE *myfile = fopen("program.txt", "r");
-	// make sure it is valid:
-	if (!myfile) {
-		return -1;
-	}
+Node* parse_file(FILE* myfile) {
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
 	
@@ -95,6 +90,7 @@ int main(int, char**) {
 
 	system("dot -Tpng -Efontname=Roboto -Nfontname=Roboto graph.dot -o graph.png");
 	
+	return program;
 }
 
 void yyerror(const char *s) {
