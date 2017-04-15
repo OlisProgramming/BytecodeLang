@@ -2,7 +2,7 @@
 #define LEXPARSE_NODES_H
 #include <string>
 #include <vector>
-#include "types.h"
+#include "../types.h"
 
 class Node { public: virtual std::string getDotCommand(std::string name) = 0; virtual std::string getSymbol() = 0; virtual std::string getClassName() = 0; };
 
@@ -25,6 +25,8 @@ protected:
 	Node* right;
 public:
 	NodeBinaryOperator(Node* left, Node* right) : left(left), right(right) {}
+	Node* getLeft() { return left; }
+	Node* getRight() { return right; }
 	std::string getDotCommand(std::string name) override {		
 		return name+" [label=\"" + getSymbol() + "\"];\n" + left->getDotCommand(name+"_A") + right->getDotCommand(name+"_B") + name + " -> " + name+"_A;\n" + name + " -> " + name+"_B;\n";
 	}

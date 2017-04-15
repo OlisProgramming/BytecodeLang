@@ -2,7 +2,7 @@
 
 #include <string>
 #include <fstream>
-#include "commands.h"
+#include "../commands.h"
 
 template<typename T> void ofswrite(std::ofstream& ofs, T val) {
 	ofs.write(reinterpret_cast<char*>(&val), sizeof(T));
@@ -37,7 +37,11 @@ void generate_bytecode(Node* program, std::string outfilename) {
 
 void generate_bytecode(Node* node, std::ofstream& ofs) {
 	if (node->getClassName() == "NodeProgram") {
-		for (Node* expr : ((NodeProgram*)node)->getExprList()->getChildren()) {
+		generate_bytecode(((NodeProgram*)node)->getExprList(), ofs);
+	}
+	
+	else if (node->getClassName() == "NodeExprList") {
+		for (Node* expr : ((NodeExprList*)node)->getChildren()) {
 			// Complete a post-order traversal of each expression.
 			generate_bytecode(expr, ofs);
 		}
@@ -46,6 +50,27 @@ void generate_bytecode(Node* node, std::ofstream& ofs) {
 	else if (node->getClassName() == "NodeNumeric") {
 		ofswrite<Command>(ofs, Command::PSH_I32);
 		ofswrite<int32_t>(ofs, ((NodeNumeric*)node)->getInt32Val());
+	}
+	
+	else if (node->getClassName() == "NodePlus") {
+		generate_bytecode(((NodeBinaryOperator*)node)->getLeft(), ofs);
+		generate_bytecode(((NodeBinaryOperator*)node)->getRight(), ofs);
+		ofswrite<Command>(ofs, Command::ADD_I32);  // Assuming int32 types, modify this when semantic checking is implemented
+	}
+	else if (node->getClassName() == "NodeMinus") {
+		generate_bytecode(((NodeBinaryOperator*)node)->getLeft(), ofs);
+		generate_bytecode(((NodeBinaryOperator*)node)->getRight(), ofs);
+		ofswrite<Command>(ofs, Command::SUB_I32);
+	}
+	else if (node->getClassName() == "NodeMul") {
+		generate_bytecode(((NodeBinaryOperator*)node)->getLeft(), ofs);
+		generate_bytecode(((NodeBinaryOperator*)node)->getRight(), ofs);
+		ofswrite<Command>(ofs, Command::MUL_I32);
+	}
+	else if (node->getClassName() == "NodeDiv") {
+		generate_bytecode(((NodeBinaryOperator*)node)->getLeft(), ofs);
+		generate_bytecode(((NodeBinaryOperator*)node)->getRight(), ofs);
+		ofswrite<Command>(ofs, Command::DIV_I32);
 	}
 	
 	else {
