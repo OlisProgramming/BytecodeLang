@@ -8,7 +8,7 @@ clean:
 ##
 
 main.o: main.c
-	gcc -c	main.c	-o main.o
+	gcc -c -g	main.c	-o main.o
 
 blre: main.o
-	gcc main.o -o blre
+	gcc -g		main.o	-o blre

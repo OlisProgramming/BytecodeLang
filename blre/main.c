@@ -83,18 +83,57 @@ int main(int argc, char** argv) {
 	stprint(&stack);*/
 
 
+	int32_t tmp_i32a, tmp_i32b;
+
 	unsigned int instructionPointer = 0;
 	bool doClose = false;
-	//while (!doClose) {
+	while (!doClose && instructionPointer<size) {
 	
 		int8_t instruction = instructions[instructionPointer];
+		printf("Executing command %d (0x%02x)...\n", instruction, instruction);
 		switch (instruction) {
 			
 		case C_PSH_I32:
+			stpushi32(&stack, *((int32_t*)(instructions + instructionPointer + 1)));
+			instructionPointer += 1 + sizeof(int32_t);  // Advance instruction pointer past both the instruction and the immediate value.
 			break;
+			
+		case C_ADD_I32:
+			stpushi32(&stack, stpopi32(&stack) + stpopi32(&stack));
+			++instructionPointer;
+			break;
+		
+		case C_SUB_I32:
+			tmp_i32a = stpopi32(&stack);
+			tmp_i32b = stpopi32(&stack);
+			stpushi32(&stack, tmp_i32b - tmp_i32a);
+			++instructionPointer;
+			break;
+			
+		case C_MUL_I32:
+			stpushi32(&stack, stpopi32(&stack) * stpopi32(&stack));
+			++instructionPointer;
+			break;
+		
+		case C_DIV_I32:
+			tmp_i32a = stpopi32(&stack);
+			tmp_i32b = stpopi32(&stack);
+			stpushi32(&stack, tmp_i32b / tmp_i32a);
+			++instructionPointer;
+			break;
+			
+		default:
+			printf("Command %d (0x%02x) unrecognised at instructon %d (0x%x)! Exiting...\n", instruction, instruction, instructionPointer, instructionPointer);
+			doClose = true;
 		}
+		
+		stprint(&stack);
+	}
 	
-	//}
+	// Dump int32s from stack
+	while (stack.count) {
+		printf("Popped %d from stack.\n", stpopi32(&stack));
+	}
 
 	return 0;
 }
