@@ -48,29 +48,29 @@ void generate_bytecode(Node* node, std::ofstream& ofs) {
 	}
 	
 	else if (node->getClassName() == "NodeNumeric") {
-		ofswrite<Command>(ofs, Command::PSH_I32);
+		ofswrite<Command>(ofs, C_PSH_I32);
 		ofswrite<int32_t>(ofs, ((NodeNumeric*)node)->getInt32Val());
 	}
 	
 	else if (node->getClassName() == "NodePlus") {
 		generate_bytecode(((NodeBinaryOperator*)node)->getLeft(), ofs);
 		generate_bytecode(((NodeBinaryOperator*)node)->getRight(), ofs);
-		ofswrite<Command>(ofs, Command::ADD_I32);  // Assuming int32 types, modify this when semantic checking is implemented
+		ofswrite<Command>(ofs, C_ADD_I32);  // Assuming int32 types, modify this when semantic checking is implemented
 	}
 	else if (node->getClassName() == "NodeMinus") {
 		generate_bytecode(((NodeBinaryOperator*)node)->getLeft(), ofs);
 		generate_bytecode(((NodeBinaryOperator*)node)->getRight(), ofs);
-		ofswrite<Command>(ofs, Command::SUB_I32);
+		ofswrite<Command>(ofs, C_SUB_I32);
 	}
 	else if (node->getClassName() == "NodeMul") {
 		generate_bytecode(((NodeBinaryOperator*)node)->getLeft(), ofs);
 		generate_bytecode(((NodeBinaryOperator*)node)->getRight(), ofs);
-		ofswrite<Command>(ofs, Command::MUL_I32);
+		ofswrite<Command>(ofs, C_MUL_I32);
 	}
 	else if (node->getClassName() == "NodeDiv") {
 		generate_bytecode(((NodeBinaryOperator*)node)->getLeft(), ofs);
 		generate_bytecode(((NodeBinaryOperator*)node)->getRight(), ofs);
-		ofswrite<Command>(ofs, Command::DIV_I32);
+		ofswrite<Command>(ofs, C_DIV_I32);
 	}
 	
 	else {
